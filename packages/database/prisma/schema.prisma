@@ -12,10 +12,12 @@ datasource db {
   relationMode = "prisma"
 }
 
-// This is a stub model.
-// Delete it and add your own Prisma models.
-model Page {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model Product {
+  id             String  @id @default(cuid())
+  name           String
+  description    String?
+  price          Int
+  organizationId String  @map("organization_id")
+
+  @@map("products")
 }
