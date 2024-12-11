@@ -33,10 +33,12 @@ import {
   useSidebar,
 } from '@repo/design-system/components/ui/sidebar';
 import { cn } from '@repo/design-system/lib/utils';
+import type { LucideIcon } from 'lucide-react';
 import {
   AnchorIcon,
   BookOpenIcon,
   BotIcon,
+  Building2Icon,
   ChevronRightIcon,
   FolderIcon,
   FrameIcon,
@@ -50,13 +52,36 @@ import {
   SquareTerminalIcon,
   Trash2Icon,
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 type GlobalSidebarProperties = {
   readonly children: ReactNode;
 };
 
-const data = {
+type NavUserItem = {
+  readonly name: string;
+  readonly email: string;
+  readonly avatar: string;
+};
+
+type NavItem = {
+  readonly title: string;
+  readonly url: string;
+  readonly icon?: LucideIcon;
+  readonly isActive?: (pathname: string) => boolean;
+  readonly items?: readonly NavItem[];
+};
+
+type Nav = {
+  readonly user: NavUserItem;
+  readonly navMain: readonly NavItem[];
+  readonly navSecondary: readonly NavItem[];
+  readonly projectsNav: readonly NavItem[];
+};
+
+const data: Nav = {
   user: {
     name: 'shadcn',
     email: 'm@example.com',
@@ -64,10 +89,20 @@ const data = {
   },
   navMain: [
     {
+      title: 'Company',
+      url: '#',
+      icon: Building2Icon,
+      items: [
+        {
+          title: 'Products',
+          url: '/company/products',
+        },
+      ],
+    },
+    {
       title: 'Playground',
       url: '#',
       icon: SquareTerminalIcon,
-      isActive: true,
       items: [
         {
           title: 'History',
@@ -166,19 +201,19 @@ const data = {
       icon: SendIcon,
     },
   ],
-  projects: [
+  projectsNav: [
     {
-      name: 'Design Engineering',
+      title: 'Design Engineering',
       url: '#',
       icon: FrameIcon,
     },
     {
-      name: 'Sales & Marketing',
+      title: 'Sales & Marketing',
       url: '#',
       icon: PieChartIcon,
     },
     {
-      name: 'Travel',
+      title: 'Travel',
       url: '#',
       icon: MapIcon,
     },
@@ -187,6 +222,7 @@ const data = {
 
 export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
   const sidebar = useSidebar();
+  const pathname = usePathname();
 
   return (
     <>
@@ -216,14 +252,16 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
                 <Collapsible
                   key={item.title}
                   asChild
-                  defaultOpen={item.isActive}
+                  defaultOpen={
+                    item.isActive?.(pathname) ?? pathname.startsWith(item.url)
+                  }
                 >
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild tooltip={item.title}>
-                      <a href={item.url}>
-                        <item.icon />
+                      <Link href={item.url}>
+                        {item.icon && <item.icon />}
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                     {item.items?.length ? (
                       <>
@@ -238,9 +276,9 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
                             {item.items?.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton asChild>
-                                  <a href={subItem.url}>
+                                  <Link href={subItem.url}>
                                     <span>{subItem.title}</span>
-                                  </a>
+                                  </Link>
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
                             ))}
@@ -256,13 +294,13 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
           <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>Projects</SidebarGroupLabel>
             <SidebarMenu>
-              {data.projects.map((item) => (
-                <SidebarMenuItem key={item.name}>
+              {data.projectsNav.map((item) => (
+                <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.name}</span>
-                    </a>
+                    <Link href={item.url}>
+                      {item.icon && <item.icon />}
+                      <span>{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -307,10 +345,10 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
                 {data.navSecondary.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
+                      <Link href={item.url}>
+                        {item.icon && <item.icon />}
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

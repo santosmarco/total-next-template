@@ -1,7 +1,8 @@
-import '@repo/design-system/styles/globals.css';
 import { DesignSystemProvider } from '@repo/design-system';
 import { fonts } from '@repo/design-system/lib/fonts';
+import '@repo/design-system/styles/globals.css';
 import type { ReactNode } from 'react';
+import { AppProviders } from './components/providers';
 
 type RootLayoutProperties = {
   readonly children: ReactNode;
@@ -10,7 +11,9 @@ type RootLayoutProperties = {
 const RootLayout = ({ children }: RootLayoutProperties) => (
   <html lang="en" className={fonts} suppressHydrationWarning>
     <body>
-      <DesignSystemProvider>{children}</DesignSystemProvider>
+      <AppProviders>
+        <DesignSystemProvider>{children}</DesignSystemProvider>
+      </AppProviders>
     </body>
   </html>
 );

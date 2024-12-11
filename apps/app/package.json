@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@prisma/client": "6.0.1",
-    "@repo/auth": "workspace:*",
     "@repo/analytics": "workspace:*",
+    "@repo/auth": "workspace:*",
     "@repo/collaboration": "workspace:*",
     "@repo/database": "workspace:*",
     "@repo/design-system": "workspace:*",
@@ -27,6 +27,7 @@
     "@repo/tailwind-config": "workspace:*",
     "@repo/webhooks": "workspace:*",
     "@sentry/nextjs": "^8.43.0",
+    "@tanstack/react-query": "^5.62.7",
     "fuse.js": "^7.0.0",
     "import-in-the-middle": "^1.11.3",
     "lucide-react": "^0.468.0",
